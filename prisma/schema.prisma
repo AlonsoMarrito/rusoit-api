@@ -1,0 +1,212 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model base {
+  id                Int          @id @default(autoincrement())
+  cologne           String       @db.VarChar
+  street_and_number String       @db.VarChar
+  crosse            String       @db.VarChar
+  status            String       @db.VarChar
+  image             String       @db.VarChar
+  work_force        work_force[]
+}
+
+model damages {
+  id                 Int      @id @default(autoincrement())
+  driver_id          Int
+  vehicle_id         Int
+  damage_event       String   @db.VarChar
+  where_is_damage    String   @db.VarChar
+  photo_damage       String?  @db.VarChar
+  damage_description String   @db.VarChar
+  type_to_damage     String   @db.VarChar
+  vehicles           vehicles @relation(fields: [vehicle_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model logs_services {
+  id          Int      @id @default(autoincrement())
+  id_user     Int
+  id_service  Int
+  old_data    String?  @db.VarChar
+  new_data    String   @db.VarChar
+  date_change String   @db.VarChar
+  services    services @relation(fields: [id_service], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model preference {
+  id                    Int     @id @default(autoincrement())
+  id_user               Int?
+  name_s                String? @db.VarChar
+  last_name_s           String? @db.VarChar
+  style_colorimetry_app Int?
+  sex_visibility        String? @db.VarChar
+}
+
+model services {
+  id                     Int             @id @default(autoincrement())
+  user_id                Int
+  vehicle_id             Int
+  kilometers             Int
+  driver                 Int
+  first_firefighter      String          @db.VarChar
+  second_firefighter     String?         @db.VarChar
+  third_firefighter      String?         @db.VarChar
+  type_service           String          @db.VarChar
+  folio                  String?         @db.VarChar
+  cologne                String          @db.VarChar
+  stret                  String          @db.VarChar
+  crossing               String          @db.VarChar
+  reporter               String          @db.VarChar
+  phone_reporter         String          @db.VarChar
+  close_type             String          @db.VarChar
+  general_and_conclusion String          @db.VarChar
+  close_kilometers       Int
+  kilometers_traveled    Int?
+  status                 String          @db.VarChar
+  logs_services          logs_services[]
+  vehicles               vehicles        @relation(fields: [vehicle_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model tipe_tool_equipment {
+  id           Int     @id @default(autoincrement())
+  cover_image  String? @db.VarChar
+  name         String? @db.VarChar
+  type         String? @db.VarChar
+  on_inventory Int?
+}
+
+model type_to_vehicle {
+  id           Int     @id @default(autoincrement())
+  type         String? @db.VarChar
+  image        String? @db.VarChar
+  operative    Int?
+  in_operative Int?
+}
+
+model users {
+  id                          Int      @id @default(autoincrement())
+  first_name                  String   @db.VarChar
+  second_name                 String?  @db.VarChar
+  last_name                   String   @db.VarChar
+  second_last_name            String?  @db.VarChar
+  status_now                  String?  @db.VarChar
+  blood_group                 String?  @db.VarChar
+  blood_rh_factor             String?  @db.VarChar
+  social_security_number      String?  @db.VarChar
+  type_position               String?  @db.VarChar
+  position                    String   @db.VarChar
+  email                       String   @db.VarChar
+  phone                       String   @db.VarChar
+  employee_number             String   @unique @db.VarChar
+  work_shift                  String   @db.VarChar
+  birthdate                   DateTime @db.Date
+  start_date                  DateTime @db.Date
+  emergency_contact_name      String   @db.VarChar
+  emergency_contact_phone     String   @db.VarChar
+  emergency_contact_phone_alt String?  @db.VarChar
+}
+
+model vehicle_logs {
+  id                            Int       @id @default(autoincrement())
+  vehicle_id                    Int
+  driver_id                     Int
+  luz_delantera_alta            String    @db.VarChar
+  luz_delantera_baja            String    @db.VarChar
+  luces_de_emergencia           String    @db.VarChar
+  luces_neblineros              String    @db.VarChar
+  luz_direccional               String    @db.VarChar
+  luz_de_freno                  String    @db.VarChar
+  luz_de_reversa                String    @db.VarChar
+  luces_del_tanque_cisterna     String    @db.VarChar
+  luces_interior_cabina         String    @db.VarChar
+  motor_adicional               String    @db.VarChar
+  estado_de_tablero_indicadores String    @db.VarChar
+  elevadores_de_cristales       String    @db.VarChar
+  espejos_lateral_derecho       String    @db.VarChar
+  espejos_lateral_izquierdo     String    @db.VarChar
+  espejo_retrovisor             String    @db.VarChar
+  cristal_parabrisas            String    @db.VarChar
+  cristal_medallon              String    @db.VarChar
+  cristal_de_puertas            String    @db.VarChar
+  gato_hidraulico               String    @db.VarChar
+  herramientas_cambio_de_ruedas String    @db.VarChar
+  bocina_de_sonoros             String    @db.VarChar
+  modulo_luminosos_sonoros      String    @db.VarChar
+  torreta                       String    @db.VarChar
+  cinturones_de_seguridad       String    @db.VarChar
+  limpia_parabrisas             String    @db.VarChar
+  poliza_seguro                 String    @db.VarChar
+  tarjeta_circulacion           String    @db.VarChar
+  tapon_tanque_combustible      String    @db.VarChar
+  tapon_aceite                  String    @db.VarChar
+  tapon_agua                    String    @db.VarChar
+  nivel_aceite_motor            String    @db.VarChar
+  nivel_aceite_transmision      String    @db.VarChar
+  nivel_agua_radiador           String    @db.VarChar
+  nivel_liquido_frenos          String    @db.VarChar
+  llanta_delantera_derecha      String    @db.VarChar
+  llanta_delantera_izquierda    String    @db.VarChar
+  llanta_trasera_derecha        String    @db.VarChar
+  llanta_trasera_izquierda      String    @db.VarChar
+  llanta_repuesto               String    @db.VarChar
+  fecha_registro                DateTime? @default(now()) @db.Timestamp(6)
+  llaves_encendido              String    @db.VarChar
+  switch_encendido              String    @db.VarChar
+  bateria                       String    @db.VarChar
+  postes_terminales_bateria     String    @db.VarChar
+  vehicles                      vehicles  @relation(fields: [vehicle_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model vehicles {
+  id                     Int            @id @default(autoincrement())
+  number_unit            Int            @unique
+  type                   String         @db.VarChar
+  cover_img              String         @db.VarChar
+  left_img               String         @db.VarChar
+  up_img                 String         @db.VarChar
+  front_img              String         @db.VarChar
+  back_img               String         @db.VarChar
+  kilometers             Float
+  kilometers_to_service  Float
+  date_register          DateTime       @db.Date
+  vehicle_license_plates String         @db.VarChar
+  status                 String         @db.VarChar
+  model                  String         @db.VarChar
+  card_brand             String         @db.VarChar
+  damages                damages[]
+  services               services[]
+  vehicle_logs           vehicle_logs[]
+  work_force             work_force[]
+}
+
+model work_force {
+  id               Int       @id @default(autoincrement())
+  work_shift       String    @db.VarChar
+  id_base          Int?
+  id_vehicle       Int?
+  id_drive         Int?
+  id_persone_one   Int
+  id_persone_two   Int?
+  id_presone_trhee Int?
+  extras_persone   String?   @db.VarChar
+  date_work_shift  DateTime  @db.Date
+  notes            String?   @db.VarChar
+  base             base?     @relation(fields: [id_base], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  vehicles         vehicles? @relation(fields: [id_vehicle], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model work_shift {
+  id                    Int    @id @default(autoincrement())
+  name                  String @db.VarChar
+  operative_personal    Int?
+  in_operative_personal Int?
+  workday               String @db.VarChar
+  time_start            Int
+  working_time          Int
+}

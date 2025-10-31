@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  backend:
+    build: .
+    container_name: rusoit-api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../certs:/certs
+    environment:
+      - DATABASE_URL=postgresql://rusoit_test_user:9TChfhveYvGY55SyNQpB2awUURyLlDDe@dpg-d42i6r8dl3ps73cf0ag0-a.oregon-postgres.render.com:5432/rusoit_test?schema=public
+      - HTTPS_KEY=/certs/localhost-key.pem
+      - HTTPS_CERT=/certs/localhost.pem
