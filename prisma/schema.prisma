@@ -26,6 +26,7 @@ model damages {
   photo_damage       String?  @db.VarChar
   damage_description String   @db.VarChar
   type_to_damage     String   @db.VarChar
+  users              users    @relation(fields: [driver_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   vehicles           vehicles @relation(fields: [vehicle_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -37,6 +38,20 @@ model logs_services {
   new_data    String   @db.VarChar
   date_change String   @db.VarChar
   services    services @relation(fields: [id_service], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users       users    @relation(fields: [id_user], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model logs_tools {
+// }
+
+model place_shelter {
+  id                                         Int     @id @default(autoincrement())
+  type                                       String? @db.VarChar
+  id_vehicle_base                            Int?
+  id_e_h                                     Int?
+  users_place_shelter_id_e_hTousers          users?  @relation("place_shelter_id_e_hTousers", fields: [id_e_h], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_place_shelter_id_vehicle_baseTousers users?  @relation("place_shelter_id_vehicle_baseTousers", fields: [id_vehicle_base], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model preference {
@@ -46,6 +61,7 @@ model preference {
   last_name_s           String? @db.VarChar
   style_colorimetry_app Int?
   sex_visibility        String? @db.VarChar
+  users                 users?  @relation(fields: [id_user], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model services {
@@ -70,6 +86,7 @@ model services {
   kilometers_traveled    Int?
   status                 String          @db.VarChar
   logs_services          logs_services[]
+  users                  users           @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   vehicles               vehicles        @relation(fields: [vehicle_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -81,35 +98,50 @@ model tipe_tool_equipment {
   on_inventory Int?
 }
 
+/// We could not retrieve columns for the underlying table. Either it has none or you are missing rights to see them. Please check your privileges.
+// model tools {
+// }
+
 model type_to_vehicle {
-  id           Int     @id @default(autoincrement())
-  type         String? @db.VarChar
-  image        String? @db.VarChar
+  id           Int    @id @default(autoincrement())
+  type         String @db.VarChar
+  image        String @db.VarChar
   operative    Int?
   in_operative Int?
 }
 
 model users {
-  id                          Int      @id @default(autoincrement())
-  first_name                  String   @db.VarChar
-  second_name                 String?  @db.VarChar
-  last_name                   String   @db.VarChar
-  second_last_name            String?  @db.VarChar
-  status_now                  String?  @db.VarChar
-  blood_group                 String?  @db.VarChar
-  blood_rh_factor             String?  @db.VarChar
-  social_security_number      String?  @db.VarChar
-  type_position               String?  @db.VarChar
-  position                    String   @db.VarChar
-  email                       String   @db.VarChar
-  phone                       String   @db.VarChar
-  employee_number             String   @unique @db.VarChar
-  work_shift                  String   @db.VarChar
-  birthdate                   DateTime @db.Date
-  start_date                  DateTime @db.Date
-  emergency_contact_name      String   @db.VarChar
-  emergency_contact_phone     String   @db.VarChar
-  emergency_contact_phone_alt String?  @db.VarChar
+  id                                                 Int             @id @default(autoincrement())
+  first_name                                         String          @db.VarChar
+  second_name                                        String?         @db.VarChar
+  last_name                                          String          @db.VarChar
+  second_last_name                                   String?         @db.VarChar
+  status_now                                         String?         @db.VarChar
+  blood_group                                        String?         @db.VarChar
+  blood_rh_factor                                    String?         @db.VarChar
+  social_security_number                             String?         @db.VarChar
+  type_position                                      String?         @db.VarChar
+  position                                           String          @db.VarChar
+  email                                              String          @db.VarChar
+  phone                                              String          @db.VarChar
+  employee_number                                    String          @unique @db.VarChar
+  work_shift                                         String          @db.VarChar
+  birthdate                                          DateTime        @db.Date
+  start_date                                         DateTime        @db.Date
+  emergency_contact_name                             String          @db.VarChar
+  emergency_contact_phone                            String          @db.VarChar
+  emergency_contact_phone_alt                        String?         @db.VarChar
+  damages                                            damages[]
+  logs_services                                      logs_services[]
+  place_shelter_place_shelter_id_e_hTousers          place_shelter[] @relation("place_shelter_id_e_hTousers")
+  place_shelter_place_shelter_id_vehicle_baseTousers place_shelter[] @relation("place_shelter_id_vehicle_baseTousers")
+  preference                                         preference[]
+  services                                           services[]
+  vehicle_logs                                       vehicle_logs[]
+  work_force_work_force_id_driveTousers              work_force[]    @relation("work_force_id_driveTousers")
+  work_force_work_force_id_persone_oneTousers        work_force[]    @relation("work_force_id_persone_oneTousers")
+  work_force_work_force_id_persone_twoTousers        work_force[]    @relation("work_force_id_persone_twoTousers")
+  work_force_work_force_id_presone_threeTousers      work_force[]    @relation("work_force_id_presone_threeTousers")
 }
 
 model vehicle_logs {
@@ -160,6 +192,7 @@ model vehicle_logs {
   switch_encendido              String    @db.VarChar
   bateria                       String    @db.VarChar
   postes_terminales_bateria     String    @db.VarChar
+  users                         users     @relation(fields: [driver_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   vehicles                      vehicles  @relation(fields: [vehicle_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -186,19 +219,23 @@ model vehicles {
 }
 
 model work_force {
-  id               Int       @id @default(autoincrement())
-  work_shift       String    @db.VarChar
-  id_base          Int?
-  id_vehicle       Int?
-  id_drive         Int?
-  id_persone_one   Int
-  id_persone_two   Int?
-  id_presone_trhee Int?
-  extras_persone   String?   @db.VarChar
-  date_work_shift  DateTime  @db.Date
-  notes            String?   @db.VarChar
-  base             base?     @relation(fields: [id_base], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  vehicles         vehicles? @relation(fields: [id_vehicle], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id                                       Int       @id @default(autoincrement())
+  work_shift                               String    @db.VarChar
+  id_base                                  Int?
+  id_vehicle                               Int?
+  id_drive                                 Int?
+  id_persone_one                           Int
+  id_persone_two                           Int?
+  id_presone_three                         Int?
+  extras_persone                           String?   @db.VarChar
+  date_work_shift                          DateTime  @db.Date
+  notes                                    String?   @db.VarChar
+  base                                     base?     @relation(fields: [id_base], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_work_force_id_driveTousers         users?    @relation("work_force_id_driveTousers", fields: [id_drive], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_work_force_id_persone_oneTousers   users     @relation("work_force_id_persone_oneTousers", fields: [id_persone_one], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_work_force_id_persone_twoTousers   users?    @relation("work_force_id_persone_twoTousers", fields: [id_persone_two], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_work_force_id_presone_threeTousers users?    @relation("work_force_id_presone_threeTousers", fields: [id_presone_three], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  vehicles                                 vehicles? @relation(fields: [id_vehicle], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model work_shift {

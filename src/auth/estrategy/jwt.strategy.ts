@@ -1,14 +1,23 @@
-// src/auth/estrategy/jwt.strategy.ts
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Strategy } from 'passport-jwt';
+import { Request } from 'express';
+import * as fs from 'fs';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: 'TU_SECRETO_AQUI',
+      jwtFromRequest: (req: Request) => {
+        if (req && req.cookies && req.cookies['access_token']) {
+          return req.cookies['access_token'];
+        }
+        return null;
+      },
+      algorithms: ['RS256'],
+      secretOrKey: process.env.JWT_PUBLIC_KEY_PATH
+        ? fs.readFileSync(process.env.JWT_PUBLIC_KEY_PATH, 'utf8')
+        : undefined,
     });
   }
 
@@ -23,9 +32,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('No tiene acceso para ver estos datos');
     }
 
-    return {
-      employee_number: payload.employee_number,
-      position: payload.position,
-    };
+    return payload;
   }
 }

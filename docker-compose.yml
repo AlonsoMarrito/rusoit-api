@@ -1,5 +1,4 @@
 version: "3.8"
-
 services:
   backend:
     build: .
@@ -7,8 +6,10 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ../certs:/certs
+      - ./certs:/certs
     environment:
-      - DATABASE_URL=postgresql://rusoit_test_user:9TChfhveYvGY55SyNQpB2awUURyLlDDe@dpg-d42i6r8dl3ps73cf0ag0-a.oregon-postgres.render.com:5432/rusoit_test?schema=public
-      - HTTPS_KEY=/certs/localhost-key.pem
-      - HTTPS_CERT=/certs/localhost.pem
+      - DATABASE_URL=postgresql://rusoit_test_y85k_user:sJ5Hs2YLBRWQUyVUvJfjAnfH476XW7pH@dpg-d507n4npm1nc73c641t0-a.virginia-postgres.render.com/rusoit_test_y85k?schema=public
+      - HTTPS_KEY=/certs/localhost+2-key.pem
+      - HTTPS_CERT=/certs/localhost+2.pem
+      - JWT_PRIVATE_KEY_PATH=/certs/jwtRS256.key
+      - JWT_PUBLIC_KEY_PATH=/certs/jwtRS256.key.pub

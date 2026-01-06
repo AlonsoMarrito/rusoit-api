@@ -41,7 +41,7 @@ export class UsersService {
     }
   }
 
-  findOneByEmployeeNumber(employeeNumber: string) {
+  async findOneByEmployeeNumber(employeeNumber: string) {
     try {
       return this.prisma.users.findUnique({
         where: { employee_number: employeeNumber },
